@@ -1,30 +1,30 @@
 package store.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.criteria.HibernateCriteriaBuilder;
-import org.hibernate.query.criteria.JpaCriteriaQuery;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import store.model.Book;
 
+@RequiredArgsConstructor
 @Repository
 public class BookRepositoryImpl implements BookRepository {
-    private final SessionFactory sessionFactory;
-
-    public BookRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    private final EntityManagerFactory entityManagerFactory;
 
     @Override
     public Book save(Book book) {
-        Session session = null;
-        Transaction transaction = null;
+        EntityManager manager = null;
+        EntityTransaction transaction = null;
         try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.persist(book);
+            manager = entityManagerFactory.createEntityManager();
+            transaction = manager.getTransaction();
+            transaction.begin();
+            manager.persist(book);
             transaction.commit();
             return book;
         } catch (Exception e) {
@@ -33,21 +33,31 @@ public class BookRepositoryImpl implements BookRepository {
             }
             throw new RuntimeException("Can't save to db: " + book, e);
         } finally {
-            if (session != null) {
-                session.close();
+            if (manager != null) {
+                manager.close();
             }
         }
     }
 
     @Override
     public List<Book> findAll() {
-        try (Session session = sessionFactory.openSession()) {
-            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-            JpaCriteriaQuery<Book> query = builder.createQuery(Book.class);
+        try (EntityManager manager = entityManagerFactory.createEntityManager()) {
+            CriteriaBuilder builder = manager.getCriteriaBuilder();
+            CriteriaQuery<Book> query = builder.createQuery(Book.class);
             query.from(Book.class);
-            return session.createQuery(query).getResultList();
+            return manager.createQuery(query).getResultList();
         } catch (Exception e) {
             throw new RuntimeException("Can't get books from db", e);
+        }
+    }
+
+    @Override
+    public Optional<Book> findBookById(long id) {
+        try (EntityManager manager = entityManagerFactory.createEntityManager()) {
+            Book book = manager.find(Book.class, id);
+            return Optional.ofNullable(book);
+        } catch (Exception e) {
+            throw new RuntimeException("Can't get book from db by id: " + id, e);
         }
     }
 }
