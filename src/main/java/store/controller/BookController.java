@@ -1,6 +1,10 @@
 package store.controller;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import store.dto.parameters.BookSearchParameters;
 import store.dto.request.CreateBookRequestDto;
 import store.dto.response.BookDto;
 import store.service.BookService;
@@ -21,6 +26,7 @@ import store.service.BookService;
 @RequestMapping(value = "/books")
 public class BookController {
     private final BookService bookService;
+    private BookSearchParameters bookSearchParameters;
 
     @GetMapping
     public List<BookDto> getAll() {
@@ -48,5 +54,21 @@ public class BookController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteBookById(@PathVariable Long id) {
         bookService.delete(id);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> searchBooks(BookSearchParameters bookSearchParameters)
+            throws IllegalAccessException {
+        Map<String, List<String>> params = new HashMap<>();
+        for (Field field : bookSearchParameters.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String[] values = (String[]) field.get(bookSearchParameters);
+            if (values != null) {
+                String fieldName = field.getName();
+                String key = fieldName.substring(0, fieldName.length() - 1);
+                params.put(key, Arrays.stream(values).toList());
+            }
+        }
+        return bookService.searchByParams(params);
     }
 }
