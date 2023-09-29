@@ -1,5 +1,6 @@
 package store.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,12 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public BookDto createBook(@RequestBody CreateBookRequestDto createBookRequestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto createBookRequestDto) {
         return bookService.save(createBookRequestDto);
     }
 
     @PutMapping("/{id}")
-    public BookDto updateBookById(@RequestBody CreateBookRequestDto requestDto,
+    public BookDto updateBookById(@RequestBody @Valid CreateBookRequestDto requestDto,
                                   @PathVariable Long id) {
         return bookService.update(requestDto, id);
     }
