@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ public class BookController {
         return bookService.getById(id);
     }
 
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Add book to db", description = "All fields of book must be present")
@@ -49,6 +51,7 @@ public class BookController {
         return bookService.save(createBookRequestDto);
     }
 
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id",
             description = "EntityNotFound exception will be thrown if can't get book by id")
@@ -58,6 +61,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @Operation(summary = "Delete book by id", description = "Safe delete a book by id")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteBookById(@PathVariable Long id) {

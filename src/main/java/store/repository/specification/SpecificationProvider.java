@@ -1,4 +1,4 @@
-package store.repository;
+package store.repository.specification;
 
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;

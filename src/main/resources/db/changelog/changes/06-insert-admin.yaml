@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_user_with_roles
+      author: mark
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              # Password 1234
+              - column:
+                  name: password
+                  value: "$2a$12$qlwlUO48NruBswzZnhCjUeXKN9xBb5ZmmmXWXXjka351pa7.kWO2e"
+              - column:
+                  name: email
+                  value: "mark@gmail.com"
+              - column:
+                  name: first_name
+                  value: "Mark"
+              - column:
+                  name: last_name
+                  value: "Godnyi"
+              - column:
+                  name: shipping_address
+                  value: "Main street 123"
+        - sql:
+            sql: insert into users_roles (user_id, role_id) select u.id, r.id from users u join roles r on r.role_name in ('USER', 'ADMIN') where u.email = 'mark@gmail.com'
+      rollback:
+        - sql:
+            sql: delete from users_roles ur where ur.user_id = (select id from users u where u.email = 'mark@gmail.com')
+        - delete:
+           tableName: users
+           where: email = 'mark@gmail.com'

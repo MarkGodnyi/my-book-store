@@ -1,4 +1,4 @@
-package store.service;
+package store.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -9,11 +9,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import store.dto.request.CreateBookRequestDto;
 import store.dto.response.BookDto;
-import store.exception.EntityNotFoudException;
+import store.exception.EntityNotFoundException;
 import store.mapper.BookDtoMapper;
 import store.model.Book;
 import store.repository.BookRepository;
-import store.repository.BookSpecificationProvider;
+import store.repository.specification.BookSpecificationProvider;
+import store.service.BookService;
 
 @Service
 @RequiredArgsConstructor
@@ -37,17 +38,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto getById(Long id) {
-        String exAnswer = String.format("Book with id: %s isn't found", id);
+        String exAnswer = String.format("Book with id: %s doesn't found", id);
         Book book = bookRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoudException(exAnswer));
+                () -> new EntityNotFoundException(exAnswer));
         return bookDtoMapper.toDto(book);
     }
 
     @Override
     public BookDto update(CreateBookRequestDto requestDto, Long id) {
-        String exAnswer = String.format("Book with id: %s isn't found", id);
+        String exAnswer = String.format("Book with id: %s doesn't found", id);
         Book book = bookRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoudException(exAnswer));
+                () -> new EntityNotFoundException(exAnswer));
         bookDtoMapper.updateBookFromDto(requestDto, book);
         bookRepository.save(book);
         return bookDtoMapper.toDto(book);

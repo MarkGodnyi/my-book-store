@@ -1,4 +1,4 @@
-package store.repository;
+package store.repository.specification;
 
 import jakarta.persistence.criteria.Predicate;
 import java.util.List;
