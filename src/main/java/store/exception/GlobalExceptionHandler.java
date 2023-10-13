@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(exception,
                 body,
                 new HttpHeaders(),
-                HttpStatus.NOT_FOUND,
+                HttpStatus.BAD_REQUEST,
                 request);
     }
 

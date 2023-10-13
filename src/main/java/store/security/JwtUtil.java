@@ -15,10 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource(value = {"classpath:application.properties"})
 public class JwtUtil {
-    @Value("${jwt.expiration}")
-    private long expirationTimeInMillis;
+    private static final Long EXPIRATION_TIME_IN_MILLIS = 600_000L;
 
-    private Key secretKey;
+    private final Key secretKey;
 
     public JwtUtil(@Value("${jwt.secret.key}") String secret) {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -27,8 +26,8 @@ public class JwtUtil {
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTimeInMillis))
+                .setIssuedAt(getCurrentTimeWithMillisOffset(0L))
+                .setExpiration(getCurrentTimeWithMillisOffset(EXPIRATION_TIME_IN_MILLIS))
                 .signWith(secretKey)
                 .compact();
     }
@@ -52,5 +51,9 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    private Date getCurrentTimeWithMillisOffset(Long timeInMillis) {
+        return new Date(System.currentTimeMillis() + timeInMillis);
     }
 }

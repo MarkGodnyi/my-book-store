@@ -18,9 +18,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDto.email(),
-                        requestDto.password()));
-        return new UserLoginResponseDto(jwtUtil.generateToken(authentication.getName()));
+        try {
+            final Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(requestDto.email(),
+                            requestDto.password()));
+            return new UserLoginResponseDto(jwtUtil.generateToken(authentication.getName()));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't authenticate user", e);
+        }
     }
 }

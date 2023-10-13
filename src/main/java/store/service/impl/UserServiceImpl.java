@@ -19,6 +19,7 @@ import store.service.UserService;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Role.RoleName USER = Role.RoleName.USER;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRegistrationDtoMapper userRegistrationDtoMapper;
