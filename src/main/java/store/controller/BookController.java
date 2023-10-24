@@ -37,7 +37,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get book book by id",
+    @Operation(summary = "Get book by id",
             description = "EntityNotFound exception will be thrown if can't get book by id")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.getById(id);
