@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_categories
+      author: mark
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Fiction"
+              - column:
+                  name: description
+                  value: "Fiction is any creative work, chiefly any narrative work, portraying individuals, events, or places that are imaginary or in ways that are imaginary. Fictional portrayals are thus inconsistent with history, fact, or plausibility."
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Fantasy"
+              - column:
+                  name: description
+                  value: "Fantasy is a genre of speculative fiction involving magical elements, typically set in a fictional universe and usually inspired by mythology or folklore. The term \"fantasy\" can also be used to describe a \"work of this genre\", usually literary."
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Science fiction"
+              - column:
+                  name: description
+                  value: "Science fiction is a genre of speculative fiction, which typically deals with imaginative and futuristic concepts such as advanced science and technology, space exploration, time travel, parallel universes, and extraterrestrial life."
+      rollback:
+        - delete:
+           tableName: categories
+           where: name = 'Fiction'
+        - delete:
+           tableName: categories
+           where: name = 'Fantasy'
+        - delete:
+           tableName: categories
+           where: name = 'Science fiction'

@@ -1,10 +1,12 @@
 package store.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.Set;
 import lombok.Data;
 
 @Data
@@ -21,4 +23,6 @@ public class CreateBookRequestDto {
     private String description;
     @NotNull
     private String coverImage;
+    @NotEmpty
+    private Set<Long> categoryIds;
 }
