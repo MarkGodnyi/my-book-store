@@ -5,7 +5,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import store.dto.CategoryDto;
+import store.dto.request.CategoryRequestDto;
+import store.dto.response.CategoryResponseDto;
 import store.exception.EntityNotFoundException;
 import store.mapper.CategoryDtoMapper;
 import store.model.Category;
@@ -19,14 +20,14 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryDtoMapper categoryDtoMapper;
 
     @Override
-    public List<CategoryDto> findAll(Pageable pageable) {
+    public List<CategoryResponseDto> findAll(Pageable pageable) {
         return categoryRepository.findAll().stream()
                 .map(categoryDtoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CategoryDto getById(Long id) {
+    public CategoryResponseDto getById(Long id) {
         String exAnswer = String.format("Category with id: %s doesn't found", id);
         return categoryRepository.findById(id)
                 .map(categoryDtoMapper::toDto)
@@ -34,17 +35,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto save(CategoryDto categoryDto) {
-        Category category = categoryDtoMapper.toModel(categoryDto);
+    public CategoryResponseDto save(CategoryRequestDto categoryRequestDto) {
+        Category category = categoryDtoMapper.toModel(categoryRequestDto);
         return categoryDtoMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
-    public CategoryDto update(Long id, CategoryDto categoryDto) {
+    public CategoryResponseDto update(Long id, CategoryRequestDto categoryRequestDto) {
         String exAnswer = String.format("Category with id: %s doesn't found", id);
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(exAnswer));
-        categoryDtoMapper.updateCategoryFromDto(categoryDto, category);
+        categoryDtoMapper.updateCategoryFromDto(categoryRequestDto, category);
         return categoryDtoMapper.toDto(categoryRepository.save(category));
     }
 
