@@ -10,8 +10,10 @@ import store.exception.EntityNotFoundException;
 import store.exception.RegistrationException;
 import store.mapper.UserRegistrationDtoMapper;
 import store.model.Role;
+import store.model.ShoppingCart;
 import store.model.User;
 import store.repository.RoleRepository;
+import store.repository.ShoppingCartRepository;
 import store.repository.UserRepository;
 import store.service.UserService;
 
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
     private final UserRegistrationDtoMapper userRegistrationDtoMapper;
     private final PasswordEncoder encoder;
 
@@ -37,6 +40,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("There is no such role in db: " + USER));
         user.setRoles(Set.of(userRole));
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
         return userRegistrationDtoMapper.toDto(userRepository.save(user));
     }
 }

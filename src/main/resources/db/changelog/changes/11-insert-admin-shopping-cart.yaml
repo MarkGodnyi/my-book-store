@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_admin_shopping_cart
+      author: mark
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: id
+                  valueComputed: (select u.id from users u where u.email = 'mark@gmail.com')
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+      rollback:
+        - sql:
+            sql: delete from shopping_carts s where s.id = (select id from users u where u.email = 'mark@gmail.com')

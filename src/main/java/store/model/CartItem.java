@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -28,10 +26,7 @@ public class CartItem {
     @JoinColumn(name = "book_id")
     private Book book;
     @ManyToOne
-//    @JoinColumn(name = "shopping_cart")
-    @JoinTable(name = "shopping_carts_cart_items",
-            joinColumns = @JoinColumn(name = "shopping_cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_item_id"))
+    @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
     private int quantity;
     @Column(nullable = false)
