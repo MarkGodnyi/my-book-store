@@ -43,6 +43,6 @@ public class UserServiceImpl implements UserService {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
         shoppingCartRepository.save(shoppingCart);
-        return userRegistrationDtoMapper.toDto(userRepository.save(user));
+        return userRegistrationDtoMapper.toDto(user);
     }
 }
