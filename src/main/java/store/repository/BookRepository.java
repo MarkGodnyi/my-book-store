@@ -10,6 +10,6 @@ import store.model.Book;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-    @Query(value = "SELECT b FROM Book b JOIN b.categories c WHERE c.id = ?1")
+    @Query(value = "SELECT b FROM Book b JOIN FETCH b.categories c WHERE c.id = ?1")
     List<Book> findAllByCategoryId(Long id, Pageable pageable);
 }

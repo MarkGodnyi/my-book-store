@@ -1,14 +1,11 @@
-package store.dto;
+package store.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CategoryDto {
-    @Null
-    private Long id;
+public class CategoryRequestDto {
     @NotBlank
     private String name;
     @Size(min = 4, max = 255)

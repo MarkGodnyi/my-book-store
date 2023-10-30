@@ -5,15 +5,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import store.config.MapperConfig;
-import store.dto.CategoryDto;
+import store.dto.request.CategoryRequestDto;
+import store.dto.response.CategoryResponseDto;
 import store.model.Category;
 
 @Mapper(config = MapperConfig.class)
 public interface CategoryDtoMapper {
-    CategoryDto toDto(Category category);
+    CategoryResponseDto toDto(Category category);
 
-    Category toModel(CategoryDto categoryDto);
+    Category toModel(CategoryRequestDto requestDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateCategoryFromDto(CategoryDto categoryDto, @MappingTarget Category category);
+    void updateCategoryFromDto(CategoryRequestDto categoryDto, @MappingTarget Category category);
 }
