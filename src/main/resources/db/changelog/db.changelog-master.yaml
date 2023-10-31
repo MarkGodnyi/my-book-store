@@ -21,3 +21,5 @@ databaseChangeLog:
       file: db/changelog/changes/10-create-cart-items-table.yaml
   - include:
       file: db/changelog/changes/11-insert-admin-shopping-cart.yaml
+  - include:
+      file: db/changelog/changes/12-add-unique-constraint-on-cart-items.yaml

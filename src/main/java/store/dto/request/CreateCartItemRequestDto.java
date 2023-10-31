@@ -10,5 +10,5 @@ public class CreateCartItemRequestDto {
     private Long bookId;
     @Positive
     @Max(value = 10)
-    private int quantity;
+    private Integer quantity;
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource(value = {"classpath:application.properties"})
 public class JwtUtil {
-    private static final Long EXPIRATION_TIME_IN_MILLIS = 600_000L;
+    private static final Long EXPIRATION_TIME_IN_MILLIS = 6000_000L;
 
     private final Key secretKey;
 

@@ -28,8 +28,7 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
-    private int quantity;
+    private Integer quantity;
     @Column(nullable = false)
     private boolean isDeleted = false;
-
 }

@@ -1,8 +1,16 @@
 package store.service;
 
-import java.util.List;
-import store.model.CartItem;
+import store.dto.request.CreateCartItemRequestDto;
+import store.dto.request.UpdateCartItemRequestDto;
+import store.dto.response.CartItemResponseDto;
+import store.dto.response.ShoppingCartResponseDto;
 
 public interface CartItemService {
-    List<CartItem> getAllByShoppingCartId(Long id);
+    ShoppingCartResponseDto getShoppingCart(Long id);
+
+    CartItemResponseDto save(CreateCartItemRequestDto requestDto);
+
+    CartItemResponseDto update(UpdateCartItemRequestDto requestDto, Long id);
+
+    void delete(Long id);
 }
