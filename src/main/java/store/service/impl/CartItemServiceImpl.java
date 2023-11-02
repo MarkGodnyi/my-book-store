@@ -7,6 +7,7 @@ import store.dto.request.CreateCartItemRequestDto;
 import store.dto.request.UpdateCartItemRequestDto;
 import store.dto.response.CartItemResponseDto;
 import store.dto.response.ShoppingCartResponseDto;
+import store.exception.DuplicatedItemException;
 import store.exception.EntityNotFoundException;
 import store.mapper.CartItemDtoMapper;
 import store.mapper.ShoppingCartDtoMapper;
@@ -36,10 +37,18 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public CartItemResponseDto save(CreateCartItemRequestDto requestDto) {
-        String exAnswer = String.format("Book with id: %s doesn't found", requestDto.getBookId());
-        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(
-                () -> new EntityNotFoundException(exAnswer));
         CartItem cartItem = cartItemMapper.toModel(requestDto);
+        String duplicatedExAnswer = String.format(
+                "Cart item with book id: %s and shopping cart id: %s already exists",
+                requestDto.getBookId(), cartItem.getShoppingCart().getId());
+        if (cartItemRepository.isDuplicated(requestDto.getBookId(),
+                cartItem.getShoppingCart().getId())) {
+            throw new DuplicatedItemException(duplicatedExAnswer);
+        }
+        String bookNotFoundAnswer = String.format(
+                "Book with id: %s doesn't found", requestDto.getBookId());
+        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(
+                () -> new EntityNotFoundException(bookNotFoundAnswer));
         cartItem.getBook().setTitle(book.getTitle());
         cartItemRepository.save(cartItem);
         return cartItemMapper.toDto(cartItem);

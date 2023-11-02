@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: add_unique_constraint_on_cart_items
-      author: mark
-      changes:
-        - addUniqueConstraint:
-            columnNames: book_id, shopping_cart_id
-            constraintName: BOOK_CONSTRAINT
-            tableName: cart_items
