@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class UpdateCartItemRequestDto {
     @Positive
-    @Max(value = 10)
+    @Max(value = 100)
     private Integer quantity;
 }

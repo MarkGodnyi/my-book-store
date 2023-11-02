@@ -1,6 +1,5 @@
 package store.repository;
 
-import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +8,6 @@ import store.model.CartItem;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    Set<CartItem> findAllByShoppingCartId(Long id);
 
     @Query("SELECT count(ci) > 0 FROM CartItem ci "
             + "WHERE ci.book.id = :bookId "

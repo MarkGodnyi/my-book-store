@@ -13,42 +13,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import store.dto.request.CreateCartItemRequestDto;
+import store.dto.request.AddToCartRequestDto;
 import store.dto.request.UpdateCartItemRequestDto;
-import store.dto.response.CartItemResponseDto;
 import store.dto.response.ShoppingCartResponseDto;
 import store.model.User;
-import store.service.CartItemService;
+import store.service.ShoppingCartService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/cart")
+@RequestMapping(value = "/carts")
 public class ShoppingCartController {
-    private final CartItemService cartItemService;
+    private final ShoppingCartService shoppingCartService;
 
     @GetMapping
     public ShoppingCartResponseDto retrieveShoppingCart(Authentication authentication) {
-        Long userId = ((User) authentication.getPrincipal()).getId();
-        return cartItemService.getShoppingCart(userId);
+        return shoppingCartService.getById(getShoppingCartId(authentication));
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public CartItemResponseDto addCartItemToShoppingCart(
-            @Valid @RequestBody CreateCartItemRequestDto requestDto) {
-        return cartItemService.save(requestDto);
+    public ShoppingCartResponseDto addCartItemToShoppingCart(
+            @Valid @RequestBody AddToCartRequestDto requestDto,
+            Authentication authentication) {
+        return shoppingCartService.addToCart(requestDto, getShoppingCartId(authentication));
     }
 
     @PutMapping("/cart-items/{cartItemId}")
-    public CartItemResponseDto updateItem(
+    public ShoppingCartResponseDto updateItem(
             @Valid @RequestBody UpdateCartItemRequestDto requestDto,
-            @PathVariable Long cartItemId) {
-        return cartItemService.update(requestDto, cartItemId);
+            @PathVariable Long cartItemId,
+            Authentication authentication) {
+        return shoppingCartService.updateCartItem(requestDto,
+                cartItemId,
+                getShoppingCartId(authentication));
     }
 
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping("/cart-items/{cartItemId}")
-    public void deleteItem(@PathVariable Long cartItemId) {
-        cartItemService.delete(cartItemId);
+    public ShoppingCartResponseDto deleteItem(@PathVariable Long cartItemId,
+                                              Authentication authentication) {
+        return shoppingCartService.removeCartItem(cartItemId,
+                getShoppingCartId(authentication));
+    }
+
+    private Long getShoppingCartId(Authentication authentication) {
+        return ((User) authentication.getPrincipal()).getId();
     }
 }

@@ -6,4 +6,5 @@ import store.model.ShoppingCart;
 
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
+    ShoppingCart getShoppingCartById(Long id);
 }
