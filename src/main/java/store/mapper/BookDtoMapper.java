@@ -6,6 +6,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import store.config.MapperConfig;
 import store.dto.request.CreateBookRequestDto;
@@ -40,5 +41,12 @@ public interface BookDtoMapper {
                 .boxed()
                 .collect(Collectors.toSet());
         dto.setCategoryIds(categoryIds);
+    }
+
+    @Named("bookFromId")
+    default Book bookFromId(Long id) {
+        Book book = new Book();
+        book.setId(id);
+        return book;
     }
 }
